@@ -40,7 +40,7 @@ export const CategoryBarChart: React.FC<CategoryChartProps> = ({ transactions })
 
       <div className="space-y-3">
         {categories.length === 0 ? (
-          <div className="py-8 text-center text-xs text-slate-400">No flagged cases recorded</div>
+          <div className="py-8 text-center text-xs text-slate-600 font-medium">No flagged cases recorded</div>
         ) : (
           categories.map((cat, idx) => {
             const pct = Math.round((cat.count / maxCount) * 100);
@@ -240,32 +240,32 @@ export const ConfusionMatrixDisplay: React.FC<{ matrix: ConfusionMatrix }> = ({ 
       </div>
 
       <div className="grid grid-cols-3 gap-1.5 text-center text-xs">
-        <div className="p-2 text-slate-500 font-medium">Actual \ Predicted</div>
-        <div className="p-2 bg-white font-semibold text-slate-700 rounded-lg border border-slate-200">Predicted Fraud</div>
-        <div className="p-2 bg-white font-semibold text-slate-700 rounded-lg border border-slate-200">Predicted Safe</div>
+        <div className="p-2 text-slate-700 font-semibold">Actual \ Predicted</div>
+        <div className="p-2 bg-white font-semibold text-slate-800 rounded-lg border border-slate-200">Predicted Fraud</div>
+        <div className="p-2 bg-white font-semibold text-slate-800 rounded-lg border border-slate-200">Predicted Safe</div>
 
-        <div className="p-2 bg-white font-semibold text-slate-700 rounded-lg border border-slate-200 flex items-center justify-center">
+        <div className="p-2 bg-white font-semibold text-slate-800 rounded-lg border border-slate-200 flex items-center justify-center">
           Actual Fraud
         </div>
         <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl shadow-xs">
           <div className="text-base font-bold text-emerald-800 font-mono">{matrix.truePositive.toLocaleString()}</div>
-          <div className="text-[10px] text-emerald-700 font-semibold uppercase">True Positive (TP)</div>
+          <div className="text-[11px] text-emerald-800 font-bold uppercase">True Positive (TP)</div>
         </div>
         <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl shadow-xs">
           <div className="text-base font-bold text-rose-800 font-mono">{matrix.falseNegative.toLocaleString()}</div>
-          <div className="text-[10px] text-rose-700 font-semibold uppercase">False Negative (FN)</div>
+          <div className="text-[11px] text-rose-800 font-bold uppercase">False Negative (FN)</div>
         </div>
 
-        <div className="p-2 bg-white font-semibold text-slate-700 rounded-lg border border-slate-200 flex items-center justify-center">
+        <div className="p-2 bg-white font-semibold text-slate-800 rounded-lg border border-slate-200 flex items-center justify-center">
           Actual Safe
         </div>
         <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl shadow-xs">
           <div className="text-base font-bold text-amber-800 font-mono">{matrix.falsePositive.toLocaleString()}</div>
-          <div className="text-[10px] text-amber-700 font-semibold uppercase">False Positive (FP)</div>
+          <div className="text-[11px] text-amber-800 font-bold uppercase">False Positive (FP)</div>
         </div>
         <div className="p-3 bg-teal-50 border border-teal-200 rounded-xl shadow-xs">
           <div className="text-base font-bold text-teal-800 font-mono">{matrix.trueNegative.toLocaleString()}</div>
-          <div className="text-[10px] text-teal-700 font-semibold uppercase">True Negative (TN)</div>
+          <div className="text-[11px] text-teal-800 font-bold uppercase">True Negative (TN)</div>
         </div>
       </div>
     </div>

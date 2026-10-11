@@ -245,8 +245,8 @@ export const AlgorithmManagement: React.FC<Props> = ({
                     {fb.adminVerdict.replace('_', ' ')}
                   </span>
                 </div>
-                <p className="text-slate-600 text-[11px]">{fb.notes}</p>
-                <div className="text-[10px] text-slate-400 flex items-center justify-between pt-1">
+                <p className="text-slate-700 text-xs font-medium">{fb.notes}</p>
+                <div className="text-[11px] text-slate-600 font-medium flex items-center justify-between pt-1">
                   <span>Original Risk Score: {fb.originalRiskScore}/100</span>
                   <span>{fb.timestamp}</span>
                 </div>

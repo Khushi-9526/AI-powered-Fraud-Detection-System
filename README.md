@@ -33,21 +33,6 @@ Secured by isolated access portals and **RFC 6238 Time-based One-Time Password (
 
 ---
 
-## 📸 System Screenshots & Interface Visuals
-
-Every screen is designed with razor-sharp vector typography, high-contrast indicators, and zero blur:
-
-| Screen | Preview |
-| :--- | :--- |
-| **1. Access Verification & Google Authenticator 2FA** | ![Access Verification](./public/screenshots/01-login-and-2fa.svg) |
-| **2. Cardholder Portal: Real-Time Fraud Alerts** | ![Real-Time Alerts](./public/screenshots/02-user-alerts.svg) |
-| **3. Transaction Simulator & ML Anomaly Decomposition** | ![Transaction Simulator](./public/screenshots/03-transaction-simulator.svg) |
-| **4. Admin Security Console: Detection Thresholds** | ![Admin Configuration](./public/screenshots/04-admin-config.svg) |
-| **5. Detection Reports: 24-Hour Timeline & Ledger** | ![Detection Reports](./public/screenshots/05-admin-reports.svg) |
-| **6. ML Algorithm Benchmarking & Confusion Matrix** | ![Algorithm Management](./public/screenshots/06-admin-algorithm.svg) |
-
----
-
 ## ⛏️ Tech Stack, APIs, and Other Resources
 
 ### Backend (Java Ecosystem)

@@ -531,27 +531,27 @@ export const LoginPortal: React.FC<Props> = ({ onLogin }) => {
               </button>
             </form>
 
-            <div className="pt-1 text-center text-[10px] text-slate-400">
-              <span>Backed by Time-based One-Time Password (TOTP RFC 6238)</span>
+            <div className="pt-1 text-center text-xs text-slate-600 font-medium">
+              <span>Protected by Time-based One-Time Password (TOTP RFC 6238)</span>
             </div>
           </div>
         )}
       </main>
 
       {/* Sleek Compact Footer */}
-      <footer className="bg-white border-t border-slate-200/80 px-4 sm:px-6 py-2 text-[11px] text-slate-500 shrink-0">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-1 text-center sm:text-left">
+      <footer className="bg-white border-t border-slate-200/80 px-4 sm:px-6 py-2.5 text-xs text-slate-600 shrink-0 font-medium">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-1.5 text-center sm:text-left">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-slate-700">AI-powered Fraud Detection System</span>
+            <span className="font-semibold text-slate-800">AI-powered Fraud Detection System</span>
             <span>·</span>
-            <span className="text-teal-700 font-medium">Enterprise Security Operations</span>
+            <span className="text-teal-700 font-semibold">Enterprise Security Operations</span>
             <span>·</span>
             <span>2-Factor Authenticator Protected</span>
           </div>
-          <div className="flex items-center gap-3 text-[10px] font-mono text-slate-400">
+          <div className="flex items-center gap-3 text-xs font-mono text-slate-600 font-medium">
             <span>Google Authenticator TOTP</span>
             <span>·</span>
-            <span className="text-teal-700 font-medium">Aesthetic Light Theme</span>
+            <span className="text-teal-700 font-semibold">Aesthetic Light Theme</span>
           </div>
         </div>
       </footer>

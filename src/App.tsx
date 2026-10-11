@@ -27,7 +27,6 @@ export default function App() {
     accountNumber?: string;
   } | null>(null);
 
-  const [isCompactFit, setIsCompactFit] = useState<boolean>(false);
   const [systemConfig, setSystemConfig] = useState<SystemConfig>(initialSystemConfig);
   const [transactions, setTransactions] = useState<Transaction[]>(initialTransactions);
   const [alerts, setAlerts] = useState<FraudAlert[]>(initialAlerts);
@@ -144,15 +143,13 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans flex flex-col selection:bg-teal-500 selection:text-white transition-all">
-      {/* Top Navbar with Active User Info, Screenshot Fit Controls & Logout Button */}
+      {/* Top Navbar with Active User Info & Logout Button */}
       <Navbar
         currentRole={currentUser.role}
         userName={currentUser.name}
         onLogout={handleLogout}
         activeAlertsCount={activeAlertsCount}
         engineVersion={activeModel.version}
-        isCompactFit={isCompactFit}
-        onToggleCompactFit={() => setIsCompactFit(prev => !prev)}
       />
 
       {/* Role Banner / Context Bar */}
@@ -189,11 +186,7 @@ export default function App() {
       </div>
 
       {/* Main Content Area */}
-      <main className={`flex-1 w-full mx-auto transition-all ${
-        isCompactFit
-          ? 'max-w-6xl p-2.5 sm:p-4'
-          : 'max-w-7xl p-3 sm:p-5 md:p-6'
-      }`}>
+      <main className="flex-1 w-full mx-auto max-w-7xl p-3 sm:p-5 md:p-6 transition-all">
         {currentUser.role === 'ADMIN' ? (
           <AdminDashboard
             systemConfig={systemConfig}
@@ -252,7 +245,7 @@ export default function App() {
             <span className="mx-2">·</span>
             <span>Real-Time Financial Anomaly Detection</span>
           </div>
-          <div className="flex items-center gap-3 text-[11px] font-mono text-slate-400">
+          <div className="flex items-center gap-3 text-xs font-mono text-slate-600 font-medium">
             <span>Ensemble ML v2.4</span>
             <span className="text-slate-300">·</span>
             <span className="text-teal-700 font-medium">Aesthetic Light Theme</span>

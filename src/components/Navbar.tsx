@@ -12,8 +12,6 @@ interface Props {
   onLogout: () => void;
   activeAlertsCount: number;
   engineVersion: string;
-  isCompactFit?: boolean;
-  onToggleCompactFit?: () => void;
 }
 
 export const Navbar: React.FC<Props> = ({
@@ -21,9 +19,7 @@ export const Navbar: React.FC<Props> = ({
   userName,
   onLogout,
   activeAlertsCount,
-  engineVersion,
-  isCompactFit = false,
-  onToggleCompactFit
+  engineVersion
 }) => {
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/90 text-slate-900 shadow-xs">
@@ -51,32 +47,6 @@ export const Navbar: React.FC<Props> = ({
 
         {/* User Session & Logout */}
         <div className="flex items-center gap-2.5">
-          {/* Layout Fit Toggle (Razor-Sharp Vector Layout, No Blurry Zoom) */}
-          {onToggleCompactFit && (
-            <div className="hidden sm:flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs mr-1">
-              <button
-                type="button"
-                onClick={() => isCompactFit && onToggleCompactFit()}
-                className={`px-2.5 py-0.5 rounded text-[11px] font-semibold transition-all ${
-                  !isCompactFit ? 'bg-white text-teal-800 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900'
-                }`}
-                title="100% Standard Crisp View"
-              >
-                Standard
-              </button>
-              <button
-                type="button"
-                onClick={() => !isCompactFit && onToggleCompactFit()}
-                className={`px-2.5 py-0.5 rounded text-[11px] font-semibold transition-all ${
-                  isCompactFit ? 'bg-white text-teal-800 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900'
-                }`}
-                title="Compact Screenshot Fit (Razor-sharp vector styling)"
-              >
-                Compact Fit
-              </button>
-            </div>
-          )}
-
           {/* Active User Badge */}
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs">
             {currentRole === 'ADMIN' ? (

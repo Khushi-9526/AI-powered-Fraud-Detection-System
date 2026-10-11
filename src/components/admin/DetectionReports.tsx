@@ -211,7 +211,7 @@ export const DetectionReports: React.FC<Props> = ({
         {/* Table Filters */}
         <div className="p-4 border-b border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <div className="relative flex-1 max-w-sm">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+            <Search className="w-4 h-4 text-slate-500 absolute left-3 top-2.5" />
             <input
               type="text"
               placeholder="Search by case ID, user, merchant, city..."
@@ -368,7 +368,7 @@ export const DetectionReports: React.FC<Props> = ({
               <button
                 type="button"
                 onClick={() => setSelectedCase(null)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors"
+                className="p-1 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -412,7 +412,7 @@ export const DetectionReports: React.FC<Props> = ({
               </h4>
               <div className="space-y-1.5">
                 {selectedCase.anomalyReasons.length === 0 ? (
-                  <p className="text-xs text-slate-400 italic">No hard rule violations recorded.</p>
+                  <p className="text-xs text-slate-600 font-medium italic">No hard rule violations recorded.</p>
                 ) : (
                   selectedCase.anomalyReasons.map((reason, idx) => (
                     <div
