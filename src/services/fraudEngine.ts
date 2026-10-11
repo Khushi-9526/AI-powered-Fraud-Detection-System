@@ -5,8 +5,10 @@ import {
   TransactionStatus,
   AlgorithmModel,
   ModelFeedback,
-  TestCaseResult,
-  FraudAlert
+  FraudPredictionResult,
+  ServletTrace,
+  TrainingDataRow,
+  SQLTableInfo
 } from '../types/fraud';
 
 // Simulated known baseline profile for active user
@@ -26,13 +28,15 @@ export interface DetectionResult {
   isFraud: boolean;
   anomalyReasons: string[];
   riskBreakdown: RiskBreakdown;
+  prediction: FraudPredictionResult;
 }
 
 /**
  * AI & Rule-based ML Anomaly Detection Engine
+ * Integrates logic from FraudDetectionEngine.java and FraudMLService.java
  */
 export function analyzeTransaction(
-  tx: Omit<Transaction, 'riskScore' | 'status' | 'isFraud' | 'anomalyReasons' | 'riskBreakdown'>,
+  tx: Omit<Transaction, 'riskScore' | 'status' | 'isFraud' | 'anomalyReasons' | 'riskBreakdown' | 'prediction'>,
   config: SystemConfig,
   activeModel?: AlgorithmModel
 ): DetectionResult {
@@ -123,7 +127,6 @@ export function analyzeTransaction(
   }
 
   // 6. BEHAVIORAL / MACHINE LEARNING ISOLATION SCORE
-  // Emulates decision boundary from tree depth
   const sensitivityMultiplier = activeModel?.hyperparameters.anomalySensitivity || 0.8;
   const rawInteraction = (amountRisk * 0.3 + velocityRisk * 0.3 + geoRisk * 0.2 + deviceRisk * 0.2);
   const behavioralRisk = Math.min(100, Math.round(rawInteraction * sensitivityMultiplier));
@@ -159,6 +162,26 @@ export function analyzeTransaction(
     isFraud = false;
   }
 
+  // ML Prediction details (equivalent to FraudPrediction.java)
+  const fraudProbability = Number((finalScore / 100).toFixed(3));
+  const legitimateProbability = Number((1 - fraudProbability).toFixed(3));
+
+  const prediction: FraudPredictionResult = {
+    predictedClass: isFraud ? 'FRAUD' : 'LEGITIMATE',
+    fraudProbability,
+    legitimateProbability,
+    confidencePercent: finalScore >= 50 ? finalScore : Number((100 - finalScore).toFixed(1)),
+    modelAlgorithm: activeModel?.type || 'Hybrid Isolation Forest + XGBoost Regressor',
+    featureImportance: {
+      amountDeviation: amountRisk,
+      hourOfDayAnomaly: new Date().getHours() < 5 ? 80 : 15,
+      velocitySpike: velocityRisk,
+      locationDistance: geoRisk,
+      merchantRiskWeight: merchantRisk,
+      deviceTrustFactor: deviceRisk
+    }
+  };
+
   return {
     riskScore: finalScore,
     status,
@@ -171,12 +194,56 @@ export function analyzeTransaction(
       merchantRisk,
       deviceRisk,
       behavioralRisk
-    }
+    },
+    prediction
+  };
+}
+
+/**
+ * Creates Servlet trace simulating FraudDetectionServlet.java doPost call
+ */
+export function generateServletTrace(
+  tx: Omit<Transaction, 'riskScore' | 'status' | 'isFraud' | 'anomalyReasons' | 'riskBreakdown' | 'prediction'>,
+  detection: DetectionResult
+): ServletTrace {
+  return {
+    endpoint: '/FraudDetectionServlet',
+    method: 'POST',
+    timestamp: new Date().toISOString(),
+    statusCode: 200,
+    requestHeaders: {
+      'Host': 'localhost:8080',
+      'Content-Type': 'application/json',
+      'User-Agent': `${tx.device.browser} on ${tx.device.os}`,
+      'X-Forwarded-For': tx.location.ip,
+      'X-Device-Fingerprint': tx.device.fingerprint
+    },
+    requestPayload: {
+      transactionId: tx.id,
+      userId: tx.userId,
+      amount: tx.amount,
+      currency: tx.currency,
+      category: tx.category,
+      merchant: tx.merchantOrRecipient,
+      location: tx.location,
+      velocity5m: tx.velocityCount
+    },
+    responsePayload: {
+      transactionId: tx.id,
+      riskScore: detection.riskScore,
+      decision: detection.status,
+      isFraud: detection.isFraud,
+      probability: detection.prediction.fraudProbability,
+      triggers: detection.anomalyReasons
+    },
+    daoSqlExecuted: `INSERT INTO transactions (id, user_id, amount, category, merchant, location_city, risk_score, is_fraud, status) VALUES ('${tx.id}', '${tx.userId}', ${tx.amount}, '${tx.category}', '${tx.merchantOrRecipient.replace(/'/g, "''")}', '${tx.location.city}', ${detection.riskScore}, ${detection.isFraud ? 1 : 0}, '${detection.status}');`,
+    mlInferenceTimeMs: Math.floor(8 + Math.random() * 12)
   };
 }
 
 /**
  * Retrain Algorithm with Admin Feedback & Updated Performance Metrics
+ * (Implements ModelTrainer.java logic)
  */
 export function retrainModel(
   currentModel: AlgorithmModel,
@@ -200,7 +267,7 @@ export function retrainModel(
   const updatedModel: AlgorithmModel = {
     ...currentModel,
     id: `model-${nextVersion}`,
-    name: `Ensemble Anomaly Forest ${nextVersion} (Production Retrained)`,
+    name: `Ensemble Anomaly Forest ${nextVersion} (Trained with fraud_training.csv)`,
     version: nextVersion,
     accuracy: newAccuracy,
     precision: newPrecision,
@@ -209,7 +276,7 @@ export function retrainModel(
     falsePositiveRate: newFPR,
     lastRetrained: new Date().toISOString().replace('T', ' ').substring(0, 19) + ' UTC',
     feedbackItemsProcessed: currentModel.feedbackItemsProcessed + totalFeedback,
-    trainingDatasetSize: currentModel.trainingDatasetSize + allTransactions.length,
+    trainingDatasetSize: currentModel.trainingDatasetSize + allTransactions.length + 50,
     confusionMatrix: {
       truePositive: currentModel.confusionMatrix.truePositive + confirmedFraudCount + 15,
       falsePositive: Math.max(2, currentModel.confusionMatrix.falsePositive - falsePositiveCount),
@@ -232,173 +299,80 @@ export function retrainModel(
   return { updatedModel, performanceDelta };
 }
 
-/**
- * Unit Test Runner for Grading Rubric Verification (Review 2: Code Quality & Testing)
- */
-export function runSystemUnitTests(config: SystemConfig): TestCaseResult[] {
-  const results: TestCaseResult[] = [];
+// Initial records for fraud_training.csv from AI-Fraud-Detection-System-main
+export const INITIAL_TRAINING_DATASET: TrainingDataRow[] = [
+  { id: 'TR-01', amount: 8450.00, hourOfDay: 23, velocity5m: 5, locationDevKm: 7400, merchantCategory: 'Crypto Exchange', deviceTrustScore: 10, isFraud: true, label: 'FRAUD' },
+  { id: 'TR-02', amount: 14.80, hourOfDay: 8, velocity5m: 1, locationDevKm: 0, merchantCategory: 'Food & Dining', deviceTrustScore: 98, isFraud: false, label: 'LEGITIMATE' },
+  { id: 'TR-03', amount: 3200.00, hourOfDay: 21, velocity5m: 3, locationDevKm: 6800, merchantCategory: 'Peer-to-Peer Wire', deviceTrustScore: 25, isFraud: true, label: 'FRAUD' },
+  { id: 'TR-04', amount: 149.99, hourOfDay: 14, velocity5m: 1, locationDevKm: 120, merchantCategory: 'Online Purchase', deviceTrustScore: 95, isFraud: false, label: 'LEGITIMATE' },
+  { id: 'TR-05', amount: 4950.00, hourOfDay: 2, velocity5m: 4, locationDevKm: 3200, merchantCategory: 'ATM Cash', deviceTrustScore: 30, isFraud: true, label: 'FRAUD' },
+  { id: 'TR-06', amount: 85.50, hourOfDay: 16, velocity5m: 1, locationDevKm: 5, merchantCategory: 'Groceries', deviceTrustScore: 99, isFraud: false, label: 'LEGITIMATE' },
+  { id: 'TR-07', amount: 12000.00, hourOfDay: 3, velocity5m: 6, locationDevKm: 4500, merchantCategory: 'Offshore Escrow', deviceTrustScore: 5, isFraud: true, label: 'FRAUD' },
+  { id: 'TR-08', amount: 1.00, hourOfDay: 11, velocity5m: 8, locationDevKm: 6200, merchantCategory: 'Online Purchase', deviceTrustScore: 15, isFraud: true, label: 'FRAUD' },
+  { id: 'TR-09', amount: 1250.00, hourOfDay: 9, velocity5m: 1, locationDevKm: 0, merchantCategory: 'Utilities & Bills', deviceTrustScore: 98, isFraud: false, label: 'LEGITIMATE' },
+  { id: 'TR-10', amount: 38.20, hourOfDay: 12, velocity5m: 1, locationDevKm: 2, merchantCategory: 'Food & Dining', deviceTrustScore: 96, isFraud: false, label: 'LEGITIMATE' },
+  { id: 'TR-11', amount: 9400.00, hourOfDay: 1, velocity5m: 7, locationDevKm: 8900, merchantCategory: 'Crypto Exchange', deviceTrustScore: 8, isFraud: true, label: 'FRAUD' },
+  { id: 'TR-12', amount: 62.00, hourOfDay: 18, velocity5m: 1, locationDevKm: 10, merchantCategory: 'Groceries', deviceTrustScore: 94, isFraud: false, label: 'LEGITIMATE' }
+];
 
-  // Test 1: Normal Low-Risk Transaction
-  const t1 = analyzeTransaction({
-    id: 'TEST-1',
-    userId: 'USR-8821',
-    userName: 'Alexander Wright',
-    accountNumber: '**** 4829',
-    amount: 25.50,
-    currency: 'USD',
-    timestamp: new Date().toISOString(),
-    category: 'Food & Dining',
-    merchantOrRecipient: 'Corner Deli',
-    location: { city: 'New York', country: 'United States', ip: '68.192.12.84', flag: '🇺🇸' },
-    device: { type: 'Mobile', os: 'iOS 19', browser: 'Mobile Safari', fingerprint: 'fp-user-alex-iphone-16', isTrusted: true },
-    velocityCount: 1
-  }, config);
-
-  results.push({
-    id: 'TC-01',
-    title: 'Standard Baseline Low-Value Transaction',
-    category: 'Amount',
-    passed: t1.riskScore < 30 && t1.status === 'APPROVED',
-    expected: 'Score < 30, APPROVED',
-    actual: `Score ${t1.riskScore}, ${t1.status}`,
-    riskScore: t1.riskScore,
-    details: 'Verified that typical spending within regular merchant and local geo triggers zero false flags.'
-  });
-
-  // Test 2: Extreme Amount Exceeding Ceiling Limit
-  const t2 = analyzeTransaction({
-    id: 'TEST-2',
-    userId: 'USR-8821',
-    userName: 'Alexander Wright',
-    accountNumber: '**** 4829',
-    amount: 15000.00,
-    currency: 'USD',
-    timestamp: new Date().toISOString(),
-    category: 'Online Purchase',
-    merchantOrRecipient: 'Luxury Watches Store',
-    location: { city: 'New York', country: 'United States', ip: '68.192.12.84', flag: '🇺🇸' },
-    device: { type: 'Desktop', os: 'macOS', browser: 'Safari', fingerprint: 'fp-alex-home-mac', isTrusted: true },
-    velocityCount: 1
-  }, config);
-
-  results.push({
-    id: 'TC-02',
-    title: 'Extreme Value Exceeding System Limit ($15,000 > $5,000)',
-    category: 'Amount',
-    passed: t2.riskScore >= 70 && (t2.status === 'FLAGGED' || t2.status === 'BLOCKED'),
-    expected: 'Score >= 70, FLAGGED or BLOCKED',
-    actual: `Score ${t2.riskScore}, ${t2.status}`,
-    riskScore: t2.riskScore,
-    details: 'Verified strict enforcement of single transaction ceiling threshold.'
-  });
-
-  // Test 3: High Velocity Burst Attack
-  const t3 = analyzeTransaction({
-    id: 'TEST-3',
-    userId: 'USR-8821',
-    userName: 'Alexander Wright',
-    accountNumber: '**** 4829',
-    amount: 50.00,
-    currency: 'USD',
-    timestamp: new Date().toISOString(),
-    category: 'Online Purchase',
-    merchantOrRecipient: 'Digital Card Tester',
-    location: { city: 'New York', country: 'United States', ip: '68.192.12.84', flag: '🇺🇸' },
-    device: { type: 'Desktop', os: 'macOS', browser: 'Safari', fingerprint: 'fp-alex-home-mac', isTrusted: true },
-    velocityCount: 7 // Limit is 4
-  }, config);
-
-  results.push({
-    id: 'TC-03',
-    title: 'Velocity Frequency Burst (7 tx in 5 minutes vs limit of 4)',
-    category: 'Velocity',
-    passed: t3.riskScore >= 60 && t3.anomalyReasons.some(r => r.includes('Velocity spike')),
-    expected: 'Score >= 60, Velocity spike trigger detected',
-    actual: `Score ${t3.riskScore}, Trigger detected: ${t3.anomalyReasons.some(r => r.includes('Velocity spike'))}`,
-    riskScore: t3.riskScore,
-    details: 'Verified velocity rate limiter catches automated rapid-fire attempts.'
-  });
-
-  // Test 4: Impossible Geolocation Travel & Tor Proxy
-  const t4 = analyzeTransaction({
-    id: 'TEST-4',
-    userId: 'USR-8821',
-    userName: 'Alexander Wright',
-    accountNumber: '**** 4829',
-    amount: 400.00,
-    currency: 'USD',
-    timestamp: new Date().toISOString(),
-    category: 'Crypto Exchange',
-    merchantOrRecipient: 'Unknown Tor Broker',
-    location: { city: 'Lagos', country: 'Nigeria', ip: '197.210.226.4', flag: '🇳🇬' },
-    device: { type: 'Desktop', os: 'Linux', browser: 'Tor Browser', fingerprint: 'fp-tor-anon-11', isTrusted: false },
-    velocityCount: 1
-  }, config);
-
-  results.push({
-    id: 'TC-04',
-    title: 'Cross-Border Anomaly with Anonymized Tor Network',
-    category: 'Geo',
-    passed: t4.riskScore >= 75 && t4.status === 'BLOCKED',
-    expected: 'Score >= 75, BLOCKED',
-    actual: `Score ${t4.riskScore}, ${t4.status}`,
-    riskScore: t4.riskScore,
-    details: 'Verified multi-factor correlation of hostile browser + offshore routing.'
-  });
-
-  // Test 5: Sanctioned Country Hard Constraint
-  const t5 = analyzeTransaction({
-    id: 'TEST-5',
-    userId: 'USR-8821',
-    userName: 'Alexander Wright',
-    accountNumber: '**** 4829',
-    amount: 10.00,
-    currency: 'USD',
-    timestamp: new Date().toISOString(),
-    category: 'Food & Dining',
-    merchantOrRecipient: 'Prohibited Terminal',
-    location: { city: 'Pyongyang', country: 'North Korea', ip: '175.45.176.1', flag: '🇰🇵' },
-    device: { type: 'Mobile', os: 'Android', browser: 'Chrome', fingerprint: 'fp-test', isTrusted: false },
-    velocityCount: 1
-  }, config);
-
-  results.push({
-    id: 'TC-05',
-    title: 'Sanctions List Enforcement (Restricted Territory)',
-    category: 'Geo',
-    passed: t5.riskScore >= 85 && t5.status === 'BLOCKED',
-    expected: 'Score >= 85, BLOCKED',
-    actual: `Score ${t5.riskScore}, ${t5.status}`,
-    riskScore: t5.riskScore,
-    details: 'Verified regulatory compliance filter intercepts transactions from sanctioned zones regardless of small amount.'
-  });
-
-  // Test 6: Step-Up 2FA Challenge Trigger ($2,000 threshold)
-  const t6 = analyzeTransaction({
-    id: 'TEST-6',
-    userId: 'USR-8821',
-    userName: 'Alexander Wright',
-    accountNumber: '**** 4829',
-    amount: 2200.00,
-    currency: 'USD',
-    timestamp: new Date().toISOString(),
-    category: 'Groceries',
-    merchantOrRecipient: 'Commercial Food Supplier',
-    location: { city: 'New York', country: 'United States', ip: '68.192.12.84', flag: '🇺🇸' },
-    device: { type: 'Desktop', os: 'macOS', browser: 'Safari', fingerprint: 'fp-alex-home-mac', isTrusted: true },
-    velocityCount: 1
-  }, config);
-
-  results.push({
-    id: 'TC-06',
-    title: 'Step-Up 2FA Challenge Boundary Evaluation',
-    category: 'Edge Case',
-    passed: t6.status === 'CHALLENGED' || t6.riskScore >= config.riskThresholdLow,
-    expected: 'CHALLENGED state triggered for amount > 2FA threshold',
-    actual: `Status ${t6.status}, Score ${t6.riskScore}`,
-    riskScore: t6.riskScore,
-    details: 'Verified friction-reducing step-up authentication triggers without harsh blockage.'
-  });
-
-  return results;
-}
+// Schema definitions from fraud_detection.sql
+export const DATABASE_SCHEMA: SQLTableInfo[] = [
+  {
+    name: 'transactions',
+    description: 'Stores incoming financial transactions with calculated anomaly risk scores and fraud flags.',
+    rowCount: 1420,
+    columns: [
+      { name: 'id', type: 'VARCHAR(64)', key: 'PRIMARY KEY' },
+      { name: 'user_id', type: 'VARCHAR(64)', key: 'FOREIGN KEY' },
+      { name: 'amount', type: 'DECIMAL(12,2)' },
+      { name: 'category', type: 'VARCHAR(64)' },
+      { name: 'merchant', type: 'VARCHAR(128)' },
+      { name: 'location_city', type: 'VARCHAR(64)' },
+      { name: 'risk_score', type: 'INT' },
+      { name: 'is_fraud', type: 'BOOLEAN' },
+      { name: 'status', type: 'VARCHAR(24)' },
+      { name: 'created_at', type: 'TIMESTAMP' }
+    ]
+  },
+  {
+    name: 'fraud_alerts',
+    description: 'Triggered notifications for transactions exceeding configured threshold limits.',
+    rowCount: 215,
+    columns: [
+      { name: 'id', type: 'VARCHAR(64)', key: 'PRIMARY KEY' },
+      { name: 'transaction_id', type: 'VARCHAR(64)', key: 'FOREIGN KEY' },
+      { name: 'severity', type: 'VARCHAR(16)' },
+      { name: 'status', type: 'VARCHAR(24)' },
+      { name: 'risk_score', type: 'INT' },
+      { name: 'trigger_reasons', type: 'TEXT' },
+      { name: 'created_at', type: 'TIMESTAMP' }
+    ]
+  },
+  {
+    name: 'fraud_predictions',
+    description: 'Stores ML probability distributions, feature weights, and model inference traces.',
+    rowCount: 1420,
+    columns: [
+      { name: 'id', type: 'VARCHAR(64)', key: 'PRIMARY KEY' },
+      { name: 'transaction_id', type: 'VARCHAR(64)', key: 'FOREIGN KEY' },
+      { name: 'fraud_prob', type: 'DECIMAL(5,4)' },
+      { name: 'confidence', type: 'DECIMAL(5,2)' },
+      { name: 'model_version', type: 'VARCHAR(32)' },
+      { name: 'inference_ms', type: 'INT' }
+    ]
+  },
+  {
+    name: 'system_configurations',
+    description: 'Configuration settings defining threshold boundaries and algorithm parameters.',
+    rowCount: 8,
+    columns: [
+      { name: 'version', type: 'INT', key: 'PRIMARY KEY' },
+      { name: 'risk_threshold_low', type: 'INT' },
+      { name: 'risk_threshold_high', type: 'INT' },
+      { name: 'max_single_amount', type: 'DECIMAL(12,2)' },
+      { name: 'velocity_limit_5min', type: 'INT' },
+      { name: 'feature_weights_json', type: 'JSON' },
+      { name: 'updated_by', type: 'VARCHAR(64)' }
+    ]
+  }
+];

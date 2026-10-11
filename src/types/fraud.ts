@@ -26,6 +26,22 @@ export interface RiskBreakdown {
   behavioralRisk: number; // 0-100
 }
 
+export interface FraudPredictionResult {
+  predictedClass: 'FRAUD' | 'LEGITIMATE';
+  fraudProbability: number; // e.g. 0.942
+  legitimateProbability: number; // e.g. 0.058
+  confidencePercent: number; // e.g. 94.2%
+  modelAlgorithm: string;
+  featureImportance: {
+    amountDeviation: number;
+    hourOfDayAnomaly: number;
+    velocitySpike: number;
+    locationDistance: number;
+    merchantRiskWeight: number;
+    deviceTrustFactor: number;
+  };
+}
+
 export interface Transaction {
   id: string;
   userId: string;
@@ -44,6 +60,7 @@ export interface Transaction {
   anomalyReasons: string[];
   isFraud: boolean;
   riskBreakdown: RiskBreakdown;
+  prediction?: FraudPredictionResult;
   userNote?: string;
 }
 
@@ -135,13 +152,36 @@ export interface ModelFeedback {
   retrainedInVersion?: string;
 }
 
-export interface TestCaseResult {
+// Model for fraud_training.csv rows from the repository
+export interface TrainingDataRow {
   id: string;
-  title: string;
-  category: 'Velocity' | 'Amount' | 'Geo' | 'Device' | 'Edge Case';
-  passed: boolean;
-  expected: string;
-  actual: string;
-  riskScore: number;
-  details: string;
+  amount: number;
+  hourOfDay: number;
+  velocity5m: number;
+  locationDevKm: number;
+  merchantCategory: string;
+  deviceTrustScore: number;
+  isFraud: boolean;
+  label: 'FRAUD' | 'LEGITIMATE';
+}
+
+// Model for Servlet trace from FraudDetectionServlet.java
+export interface ServletTrace {
+  endpoint: string;
+  method: string;
+  timestamp: string;
+  statusCode: number;
+  requestHeaders: Record<string, string>;
+  requestPayload: any;
+  responsePayload: any;
+  daoSqlExecuted: string;
+  mlInferenceTimeMs: number;
+}
+
+// Database schema from fraud_detection.sql
+export interface SQLTableInfo {
+  name: string;
+  description: string;
+  rowCount: number;
+  columns: { name: string; type: string; key?: string }[];
 }

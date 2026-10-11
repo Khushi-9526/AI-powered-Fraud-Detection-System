@@ -139,7 +139,7 @@ export const LoginPortal: React.FC<Props> = ({ onLogin }) => {
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-extrabold text-base tracking-tight text-slate-900">
-                  AI FRAUD <span className="text-teal-600">SHIELD</span>
+                  AI-POWERED <span className="text-teal-600">FRAUD DETECTION SYSTEM</span>
                 </span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200 font-semibold">
                   SECURE 2FA
@@ -200,221 +200,233 @@ export const LoginPortal: React.FC<Props> = ({ onLogin }) => {
               </div>
             </div>
 
-            {/* Portal Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch max-w-4xl mx-auto w-full">
-              {/* USER PORTAL */}
-              <div
-                className={`p-6 sm:p-7 rounded-2xl border transition-all flex flex-col justify-between ${
-                  selectedPortal === 'USER'
-                    ? 'bg-white border-teal-500/80 shadow-lg shadow-teal-500/5 ring-1 ring-teal-500/20'
-                    : 'bg-white/70 border-slate-200 opacity-60 hover:opacity-100'
-                }`}
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="p-2.5 rounded-xl bg-teal-50 border border-teal-100 text-teal-700">
-                      <User className="w-5 h-5" />
+            {/* Conditionally Render ONLY the Selected Portal Card */}
+            <div className="max-w-xl mx-auto w-full">
+              {/* USER PORTAL - ONLY visible when User is selected */}
+              {selectedPortal === 'USER' && (
+                <div className="p-6 sm:p-8 rounded-2xl border border-teal-500/80 bg-white shadow-xl shadow-teal-500/5 ring-1 ring-teal-500/20 transition-all flex flex-col justify-between animate-in fade-in duration-200">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="p-2.5 rounded-xl bg-teal-50 border border-teal-100 text-teal-700">
+                        <User className="w-5 h-5" />
+                      </div>
+                      <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200">
+                        CLIENT PORTAL
+                      </span>
                     </div>
-                    <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200">
-                      CLIENT PORTAL
-                    </span>
-                  </div>
 
-                  <div>
-                    <h3 className="text-lg font-bold text-slate-900">Client Financial Account</h3>
-                    <p className="text-xs text-slate-500 mt-1">
-                      Sign in with your account credentials. Your profile is automatically detected.
-                    </p>
-                  </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-slate-900">Client Financial Account</h3>
+                      <p className="text-xs text-slate-500 mt-1">
+                        Sign in with your account credentials. Your profile is automatically detected.
+                      </p>
+                    </div>
 
-                  {/* Registered Preset User Selectors */}
-                  <div>
-                    <span className="text-[10px] text-slate-400 block mb-1.5 font-semibold uppercase tracking-wider">
-                      Quick select registered account holder:
-                    </span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {KNOWN_USER_PROFILES.map((p, i) => (
+                    {/* Registered Preset User Selectors */}
+                    <div>
+                      <span className="text-[10px] text-slate-400 block mb-1.5 font-semibold uppercase tracking-wider">
+                        Quick select registered account holder:
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {KNOWN_USER_PROFILES.map((p, i) => (
+                          <button
+                            key={i}
+                            type="button"
+                            onClick={() => handleUserSelectPreset(p)}
+                            className={`px-2.5 py-1 text-xs rounded-lg transition-colors border ${
+                              userNameInput === p.name
+                                ? 'bg-teal-600 text-white font-bold border-teal-600 shadow-xs'
+                                : 'bg-slate-50 text-slate-600 hover:text-slate-900 border-slate-200'
+                            }`}
+                          >
+                            {p.name.split(' ')[0]}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <form onSubmit={handleProceedToOtp} className="space-y-3.5 pt-1">
+                      <div className="space-y-1">
+                        <label className="text-xs font-medium text-slate-700 block">Account Holder Full Name</label>
+                        <input
+                          type="text"
+                          required
+                          value={userNameInput}
+                          onChange={e => setUserNameInput(e.target.value)}
+                          placeholder="e.g. Alexander Wright"
+                          className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-teal-500 focus:bg-white focus:ring-1 focus:ring-teal-500 transition-all font-medium"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-xs font-medium text-slate-700 block">Account Number / Online ID</label>
+                        <input
+                          type="text"
+                          required
+                          value={accountNumberInput}
+                          onChange={e => setAccountNumberInput(e.target.value)}
+                          placeholder="e.g. 4829-9021-3310"
+                          className="w-full px-3.5 py-2.5 text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-teal-500 focus:bg-white focus:ring-1 focus:ring-teal-500 transition-all"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-xs font-medium text-slate-700 block">Passcode / PIN</label>
+                        <input
+                          type="password"
+                          required
+                          value={userPassword}
+                          onChange={e => setUserPassword(e.target.value)}
+                          placeholder="Enter passcode"
+                          className="w-full px-3.5 py-2.5 text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-teal-500 focus:bg-white focus:ring-1 focus:ring-teal-500 transition-all"
+                        />
+                      </div>
+
+                      {/* Auto-detected box */}
+                      <div className="p-3 bg-teal-50/70 border border-teal-200 rounded-xl space-y-1 text-xs">
+                        <div className="flex items-center justify-between text-teal-800 font-semibold">
+                          <span className="flex items-center gap-1.5">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-teal-600" />
+                            Auto-Detected User Profile
+                          </span>
+                          <span className="text-[10px] text-teal-700 font-mono font-bold">{detectedUserTier}</span>
+                        </div>
+                        <div className="text-[11px] text-slate-600 flex justify-between pt-0.5">
+                          <span>Holder: <strong className="text-slate-900">{detectedUserName}</strong></span>
+                          <span className="font-mono text-teal-700">{detectedAccountNumber}</span>
+                        </div>
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="w-full mt-3 py-3 px-4 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-sm"
+                      >
+                        <span>Continue with Google Authenticator</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </button>
+
+                      <div className="pt-2 text-center">
                         <button
-                          key={i}
                           type="button"
-                          onClick={() => handleUserSelectPreset(p)}
-                          className={`px-2.5 py-1 text-xs rounded-lg transition-colors border ${
-                            userNameInput === p.name
-                              ? 'bg-teal-600 text-white font-bold border-teal-600 shadow-xs'
-                              : 'bg-slate-50 text-slate-600 hover:text-slate-900 border-slate-200'
-                          }`}
+                          onClick={() => setSelectedPortal('ADMIN')}
+                          className="text-xs text-slate-500 hover:text-teal-700 hover:underline transition-colors"
                         >
-                          {p.name.split(' ')[0]}
+                          Are you a system administrator? Switch to <strong className="font-semibold text-slate-700">Admin Security Portal</strong> &rarr;
                         </button>
-                      ))}
-                    </div>
+                      </div>
+                    </form>
                   </div>
-
-                  <form onSubmit={handleProceedToOtp} className="space-y-3 pt-1">
-                    <div className="space-y-1">
-                      <label className="text-xs font-medium text-slate-700 block">Account Holder Full Name</label>
-                      <input
-                        type="text"
-                        required
-                        value={userNameInput}
-                        onChange={e => setUserNameInput(e.target.value)}
-                        placeholder="e.g. Alexander Wright"
-                        className="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-teal-500 focus:bg-white focus:ring-1 focus:ring-teal-500 transition-all font-medium"
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-xs font-medium text-slate-700 block">Account Number / Online ID</label>
-                      <input
-                        type="text"
-                        required
-                        value={accountNumberInput}
-                        onChange={e => setAccountNumberInput(e.target.value)}
-                        placeholder="e.g. 4829-9021-3310"
-                        className="w-full px-3.5 py-2 text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-teal-500 focus:bg-white focus:ring-1 focus:ring-teal-500 transition-all"
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-xs font-medium text-slate-700 block">Passcode / PIN</label>
-                      <input
-                        type="password"
-                        required
-                        value={userPassword}
-                        onChange={e => setUserPassword(e.target.value)}
-                        placeholder="Enter passcode"
-                        className="w-full px-3.5 py-2 text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-teal-500 focus:bg-white focus:ring-1 focus:ring-teal-500 transition-all"
-                      />
-                    </div>
-
-                    {/* Auto-detected box */}
-                    <div className="p-3 bg-teal-50/60 border border-teal-200/80 rounded-xl space-y-1 text-xs">
-                      <div className="flex items-center justify-between text-teal-800 font-semibold">
-                        <span className="flex items-center gap-1.5">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-teal-600" />
-                          Auto-Detected User Profile
-                        </span>
-                        <span className="text-[10px] text-teal-700 font-mono">{detectedUserTier}</span>
-                      </div>
-                      <div className="text-[11px] text-slate-600 flex justify-between pt-0.5">
-                        <span>Holder: <strong className="text-slate-900">{detectedUserName}</strong></span>
-                        <span className="font-mono text-teal-700">{detectedAccountNumber}</span>
-                      </div>
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="w-full mt-3 py-2.5 px-4 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-sm"
-                    >
-                      <span>Continue with Google Authenticator</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </form>
                 </div>
-              </div>
+              )}
 
-              {/* ADMIN PORTAL */}
-              <div
-                className={`p-6 sm:p-7 rounded-2xl border transition-all flex flex-col justify-between ${
-                  selectedPortal === 'ADMIN'
-                    ? 'bg-white border-teal-500/80 shadow-lg shadow-teal-500/5 ring-1 ring-teal-500/20'
-                    : 'bg-white/70 border-slate-200 opacity-60 hover:opacity-100'
-                }`}
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="p-2.5 rounded-xl bg-cyan-50 border border-cyan-100 text-cyan-700">
-                      <ShieldCheck className="w-5 h-5" />
+              {/* ADMIN PORTAL - ONLY visible when Admin is selected */}
+              {selectedPortal === 'ADMIN' && (
+                <div className="p-6 sm:p-8 rounded-2xl border border-cyan-500/80 bg-white shadow-xl shadow-cyan-500/5 ring-1 ring-cyan-500/20 transition-all flex flex-col justify-between animate-in fade-in duration-200">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="p-2.5 rounded-xl bg-cyan-50 border border-cyan-100 text-cyan-700">
+                        <ShieldCheck className="w-5 h-5" />
+                      </div>
+                      <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-cyan-50 text-cyan-700 border border-cyan-200">
+                        SECURITY OPERATIONS
+                      </span>
                     </div>
-                    <span className="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-cyan-50 text-cyan-700 border border-cyan-200">
-                      SECURITY OPERATIONS
-                    </span>
-                  </div>
 
-                  <div>
-                    <h3 className="text-lg font-bold text-slate-900">Admin Security Console</h3>
-                    <p className="text-xs text-slate-500 mt-1">
-                      Configure detection thresholds, inspect fraud graphical reports, and retrain ML algorithms.
-                    </p>
-                  </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-slate-900">Admin Security Console</h3>
+                      <p className="text-xs text-slate-500 mt-1">
+                        Configure detection thresholds, inspect fraud graphical reports, and retrain ML algorithms.
+                      </p>
+                    </div>
 
-                  {/* Preset Roles */}
-                  <div>
-                    <span className="text-[10px] text-slate-400 block mb-1.5 font-semibold uppercase tracking-wider">
-                      Select clearance role:
-                    </span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {[
-                        'Sarah Vance (Chief Risk Officer)',
-                        'David Chen (Lead Anomaly Engineer)',
-                        'Elena Morales (Fraud Operations Admin)'
-                      ].map((adminName, i) => (
+                    {/* Preset Roles */}
+                    <div>
+                      <span className="text-[10px] text-slate-400 block mb-1.5 font-semibold uppercase tracking-wider">
+                        Select clearance role:
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {[
+                          'Sarah Vance (Chief Risk Officer)',
+                          'David Chen (Lead Anomaly Engineer)',
+                          'Elena Morales (Fraud Operations Admin)'
+                        ].map((adminName, i) => (
+                          <button
+                            key={i}
+                            type="button"
+                            onClick={() => setAdminIdInput(adminName)}
+                            className={`px-2.5 py-1 text-xs rounded-lg transition-colors border ${
+                              adminIdInput === adminName
+                                ? 'bg-cyan-600 text-white font-bold border-cyan-600 shadow-xs'
+                                : 'bg-slate-50 text-slate-600 hover:text-slate-900 border-slate-200'
+                            }`}
+                          >
+                            {adminName.split(' ')[0]}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <form onSubmit={handleProceedToOtp} className="space-y-3.5 pt-1">
+                      <div className="space-y-1">
+                        <label className="text-xs font-medium text-slate-700 block">Security Admin ID / Officer Name</label>
+                        <input
+                          type="text"
+                          required
+                          value={adminIdInput}
+                          onChange={e => setAdminIdInput(e.target.value)}
+                          placeholder="e.g. Sarah Vance (Chief Risk Officer)"
+                          className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-cyan-500 focus:bg-white focus:ring-1 focus:ring-cyan-500 transition-all font-medium"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-xs font-medium text-slate-700 block">Clearance Key / PIN</label>
+                        <input
+                          type="password"
+                          required
+                          value={adminPin}
+                          onChange={e => setAdminPin(e.target.value)}
+                          placeholder="Enter clearance key"
+                          className="w-full px-3.5 py-2.5 text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-cyan-500 focus:bg-white focus:ring-1 focus:ring-cyan-500 transition-all"
+                        />
+                      </div>
+
+                      {/* Auto-detected Admin box */}
+                      <div className="p-3 bg-cyan-50/70 border border-cyan-200 rounded-xl space-y-1 text-xs">
+                        <div className="flex items-center justify-between text-cyan-800 font-semibold">
+                          <span className="flex items-center gap-1.5">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-cyan-600" />
+                            Auto-Detected Clearance
+                          </span>
+                          <span className="text-[10px] text-cyan-700 font-mono font-bold">LEVEL 5 ROOT</span>
+                        </div>
+                        <div className="text-[11px] text-slate-600 flex justify-between pt-0.5">
+                          <span>Officer: <strong className="text-slate-900">{adminIdInput || 'Sarah Vance'}</strong></span>
+                          <span className="text-emerald-700 font-medium">Clearance Verified</span>
+                        </div>
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="w-full mt-3 py-3 px-4 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-sm"
+                      >
+                        <span>Continue with Google Authenticator</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </button>
+
+                      <div className="pt-2 text-center">
                         <button
-                          key={i}
                           type="button"
-                          onClick={() => setAdminIdInput(adminName)}
-                          className={`px-2.5 py-1 text-xs rounded-lg transition-colors border ${
-                            adminIdInput === adminName
-                              ? 'bg-cyan-600 text-white font-bold border-cyan-600 shadow-xs'
-                              : 'bg-slate-50 text-slate-600 hover:text-slate-900 border-slate-200'
-                          }`}
+                          onClick={() => setSelectedPortal('USER')}
+                          className="text-xs text-slate-500 hover:text-cyan-700 hover:underline transition-colors"
                         >
-                          {adminName.split(' ')[0]}
+                          Are you a banking client? Switch to <strong className="font-semibold text-slate-700">User Banking Portal</strong> &rarr;
                         </button>
-                      ))}
-                    </div>
+                      </div>
+                    </form>
                   </div>
-
-                  <form onSubmit={handleProceedToOtp} className="space-y-3 pt-1">
-                    <div className="space-y-1">
-                      <label className="text-xs font-medium text-slate-700 block">Security Admin ID / Officer Name</label>
-                      <input
-                        type="text"
-                        required
-                        value={adminIdInput}
-                        onChange={e => setAdminIdInput(e.target.value)}
-                        placeholder="e.g. Sarah Vance (Chief Risk Officer)"
-                        className="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-cyan-500 focus:bg-white focus:ring-1 focus:ring-cyan-500 transition-all font-medium"
-                      />
-                    </div>
-
-                    <div className="space-y-1">
-                      <label className="text-xs font-medium text-slate-700 block">Clearance Key / PIN</label>
-                      <input
-                        type="password"
-                        required
-                        value={adminPin}
-                        onChange={e => setAdminPin(e.target.value)}
-                        placeholder="Enter clearance key"
-                        className="w-full px-3.5 py-2 text-xs font-mono bg-slate-50 border border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-cyan-500 focus:bg-white focus:ring-1 focus:ring-cyan-500 transition-all"
-                      />
-                    </div>
-
-                    {/* Auto-detected Admin box */}
-                    <div className="p-3 bg-cyan-50/60 border border-cyan-200/80 rounded-xl space-y-1 text-xs">
-                      <div className="flex items-center justify-between text-cyan-800 font-semibold">
-                        <span className="flex items-center gap-1.5">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-cyan-600" />
-                          Auto-Detected Clearance
-                        </span>
-                        <span className="text-[10px] text-cyan-700 font-mono">LEVEL 5 ROOT</span>
-                      </div>
-                      <div className="text-[11px] text-slate-600 flex justify-between pt-0.5">
-                        <span>Officer: <strong className="text-slate-900">{adminIdInput || 'Sarah Vance'}</strong></span>
-                        <span className="text-emerald-700 font-medium">Clearance Verified</span>
-                      </div>
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="w-full mt-3 py-2.5 px-4 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-sm"
-                    >
-                      <span>Continue with Google Authenticator</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </form>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         ) : (
@@ -525,7 +537,7 @@ export const LoginPortal: React.FC<Props> = ({ onLogin }) => {
       <footer className="bg-white border-t border-slate-200/80 px-6 py-4 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-slate-700">AI Fraud Shield</span>
+            <span className="font-semibold text-slate-700">AI-powered Fraud Detection System</span>
             <span>·</span>
             <span>2-Factor Authenticator Protected</span>
           </div>

@@ -131,69 +131,97 @@ export const RiskDistributionHistogram: React.FC<{ transactions: Transaction[] }
 };
 
 export const FraudTrendTimeline: React.FC<{ transactions: Transaction[] }> = ({ transactions }) => {
+  const currentTotal = transactions.length;
+  const currentFraud = transactions.filter(t => t.isFraud || t.status === 'BLOCKED' || t.status === 'FLAGGED').length;
+
   const timeBuckets = [
     { time: '02:00', total: 12, fraud: 0 },
     { time: '04:00', total: 8, fraud: 0 },
     { time: '06:00', total: 14, fraud: 1 },
     { time: '08:00', total: 29, fraud: 0 },
-    { time: '10:00', total: 42, fraud: 1 },
-    { time: '12:00', total: 58, fraud: 1 },
-    { time: '14:00', total: 64, fraud: 2 },
-    { time: '16:00', total: 51, fraud: 0 },
+    { time: '10:00', total: 42, fraud: 2 },
+    { time: '12:00', total: 58, fraud: 3 },
+    { time: '14:00', total: 64, fraud: 4 },
+    { time: '16:00', total: 51, fraud: 1 },
     { time: '18:00', total: 49, fraud: 2 },
-    { time: '20:00', total: 60, fraud: 1 },
-    { time: '22:00', total: 38, fraud: 3 },
-    { time: 'Now', total: transactions.length, fraud: transactions.filter(t => t.isFraud).length }
+    { time: '20:00', total: 60, fraud: 3 },
+    { time: '22:00', total: 38, fraud: 2 },
+    { time: 'Live', total: Math.max(currentTotal, 25), fraud: currentFraud }
   ];
 
-  const maxTotal = Math.max(...timeBuckets.map(b => b.total), 50);
+  const maxTotal = Math.max(...timeBuckets.map(b => b.total), 70);
 
   return (
-    <div className="w-full">
-      <div className="flex items-center justify-between mb-4">
+    <div className="w-full min-w-0">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
         <div>
           <h4 className="text-sm font-bold text-slate-900">Transaction Volume vs Anomaly</h4>
-          <p className="text-xs text-slate-500">Real-time velocity and detected anomalous surges</p>
+          <p className="text-xs text-slate-500">24-hour velocity distribution and detected anomalous surges</p>
         </div>
-        <div className="flex items-center gap-3 text-xs">
+        <div className="flex items-center gap-3 text-xs shrink-0">
           <span className="flex items-center gap-1.5 text-slate-600 font-medium">
-            <span className="w-2.5 h-2.5 rounded-sm bg-teal-600" /> Normal Volume
+            <span className="w-2.5 h-2.5 rounded-xs bg-teal-600" /> Normal Volume
           </span>
           <span className="flex items-center gap-1.5 text-rose-600 font-medium">
-            <span className="w-2.5 h-2.5 rounded-sm bg-rose-500" /> Flagged Fraud
+            <span className="w-2.5 h-2.5 rounded-xs bg-rose-500" /> Flagged Fraud
           </span>
         </div>
       </div>
 
-      <div className="relative h-44 w-full flex items-end gap-1.5 pt-4 border-b border-slate-200">
-        {timeBuckets.map((bucket, idx) => {
-          const totalHeight = Math.round((bucket.total / maxTotal) * 100);
-          const fraudHeight = bucket.fraud > 0 ? Math.round((bucket.fraud / 4) * 80) : 0;
-          return (
-            <div key={idx} className="flex-1 flex flex-col items-center h-full justify-end relative group">
-              {bucket.fraud > 0 && (
-                <div className="absolute -top-1 px-1 py-0.5 bg-rose-600 text-[9px] font-mono text-white rounded shadow-xs font-bold">
-                  {bucket.fraud}
+      {/* Chart container */}
+      <div className="relative h-48 w-full pt-6 pb-1 border-b border-slate-200">
+        <div className="h-full w-full flex items-end gap-1 sm:gap-2">
+          {timeBuckets.map((bucket, idx) => {
+            // Stacked bar heights safely calculated
+            const totalPct = Math.min(100, Math.max(12, Math.round((bucket.total / maxTotal) * 100)));
+            const fraudRatio = bucket.total > 0 ? bucket.fraud / bucket.total : 0;
+            const fraudPctOfBar = Math.min(100, Math.round(fraudRatio * 100));
+
+            return (
+              <div
+                key={idx}
+                className="flex-1 min-w-0 flex flex-col items-center h-full justify-end relative group cursor-pointer"
+              >
+                {/* Clean hover tooltip that stays inside layout */}
+                <div className="absolute -top-7 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900 text-white text-[10px] font-mono py-1 px-2 rounded-md shadow-lg pointer-events-none z-30 whitespace-nowrap">
+                  {bucket.time}: {bucket.total} total · {bucket.fraud} fraud
                 </div>
-              )}
-              <div className="w-full bg-slate-100 rounded-t h-full flex items-end overflow-hidden relative">
-                <div
-                  className="w-full bg-teal-600/70 transition-all duration-500 rounded-t"
-                  style={{ height: `${Math.max(8, totalHeight)}%` }}
-                />
+
+                {/* Fraud count pill above bar if fraud > 0 */}
                 {bucket.fraud > 0 && (
-                  <div
-                    className="absolute bottom-0 w-full bg-rose-500 transition-all duration-500"
-                    style={{ height: `${Math.max(12, fraudHeight)}%` }}
-                  />
+                  <span className="text-[9px] font-mono font-bold text-rose-600 mb-1 leading-none">
+                    {bucket.fraud}
+                  </span>
                 )}
+
+                {/* Stacked bar container */}
+                <div
+                  className="w-full max-w-[42px] bg-slate-100 rounded-t-md overflow-hidden flex flex-col justify-end transition-all duration-300"
+                  style={{ height: `${totalPct}%` }}
+                >
+                  {/* Top segment: Normal Volume */}
+                  <div
+                    className="w-full bg-teal-600/80 group-hover:bg-teal-600 transition-colors"
+                    style={{ height: `${100 - fraudPctOfBar}%` }}
+                  />
+
+                  {/* Bottom segment: Flagged Fraud */}
+                  {fraudPctOfBar > 0 && (
+                    <div
+                      className="w-full bg-rose-500 group-hover:bg-rose-600 transition-colors"
+                      style={{ height: `${fraudPctOfBar}%` }}
+                    />
+                  )}
+                </div>
+
+                {/* Time label */}
+                <span className="text-[10px] text-slate-500 font-mono mt-1.5 font-medium truncate w-full text-center block">
+                  {bucket.time}
+                </span>
               </div>
-              <span className="text-[10px] text-slate-500 font-mono mt-1 font-medium">
-                {bucket.time}
-              </span>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );

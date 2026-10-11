@@ -32,7 +32,7 @@ export const Navbar: React.FC<Props> = ({
           <div>
             <div className="flex items-center gap-2">
               <span className="font-extrabold text-base tracking-tight text-slate-900">
-                AI FRAUD <span className="text-teal-600">SHIELD</span>
+                AI-POWERED <span className="text-teal-600">FRAUD DETECTION SYSTEM</span>
               </span>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200 font-bold">
                 v{engineVersion}

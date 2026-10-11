@@ -188,19 +188,19 @@ export const DetectionReports: React.FC<Props> = ({
           </button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           {/* Chart 1: Category Bar Chart */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs min-w-0 overflow-hidden">
             <CategoryBarChart transactions={transactions} />
           </div>
 
           {/* Chart 2: Risk Distribution Histogram */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs min-w-0 overflow-hidden">
             <RiskDistributionHistogram transactions={transactions} />
           </div>
 
-          {/* Chart 3: Timeline Trend */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+          {/* Chart 3: Timeline Trend (Full Width for clean 24-hr layout) */}
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs lg:col-span-2 min-w-0 overflow-hidden">
             <FraudTrendTimeline transactions={transactions} />
           </div>
         </div>

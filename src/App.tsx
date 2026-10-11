@@ -241,7 +241,7 @@ export default function App() {
       <footer className="bg-white border-t border-slate-200 text-slate-500 text-xs py-4 px-4 sm:px-6 mt-auto">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
           <div>
-            <span className="font-semibold text-slate-700">AI Fraud Shield Engine</span>
+            <span className="font-semibold text-slate-700">AI-powered Fraud Detection System</span>
             <span className="mx-2">·</span>
             <span>Real-Time Financial Anomaly Detection</span>
           </div>
