@@ -1,0 +1,6 @@
+{
+  "name": "AI-Powered Fraud Detection System",
+  "description": "Enterprise machine learning fraud detection platform featuring real-time financial transaction monitoring, anomaly scoring, admin configuration, detection reports, and algorithm management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
