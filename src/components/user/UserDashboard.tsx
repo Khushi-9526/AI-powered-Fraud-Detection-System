@@ -175,8 +175,8 @@ export const UserDashboard: React.FC<Props> = ({
               Active AI Anomaly Shield
             </span>
             <span className="text-slate-300">·</span>
-            <span className="text-amber-800 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200 font-bold text-[10px] font-mono">
-              ☕ Java 21 Engine
+            <span className="text-teal-800 bg-teal-50 px-2.5 py-0.5 rounded-full border border-teal-200 font-semibold text-[11px]">
+              Real-Time Security Active
             </span>
           </div>
           <h2 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900">{userName}</h2>
@@ -302,9 +302,9 @@ export const UserDashboard: React.FC<Props> = ({
                           }`}>
                             {alert.severity} RISK
                           </span>
-                          <span className="text-xs font-mono text-slate-400">Alert ID: {alert.id}</span>
-                          <span className="text-xs text-slate-300">·</span>
-                          <span className="text-xs text-slate-500 font-medium">{alert.timestamp}</span>
+                          <span className="text-xs font-mono text-slate-700 font-semibold">Alert ID: {alert.id}</span>
+                          <span className="text-slate-300">·</span>
+                          <span className="text-xs text-slate-600 font-medium">{alert.timestamp}</span>
                         </div>
 
                         <h4 className="text-sm font-bold text-slate-900 pt-1">
@@ -317,7 +317,7 @@ export const UserDashboard: React.FC<Props> = ({
 
                       {/* AI Risk Score Badge */}
                       <div className="sm:text-right shrink-0">
-                        <div className="text-[10px] uppercase font-semibold text-slate-400">AI Risk Score</div>
+                        <div className="text-[10px] uppercase font-bold text-slate-600">AI Risk Score</div>
                         <div className={`text-xl font-bold font-mono ${
                           alert.riskScore >= 80 ? 'text-rose-600' : 'text-amber-600'
                         }`}>
@@ -402,7 +402,7 @@ export const UserDashboard: React.FC<Props> = ({
 
               {/* Quick Scenarios */}
               <div className="flex items-center gap-1.5 flex-wrap">
-                <span className="text-[11px] text-slate-400 font-semibold mr-1">Quick Scenarios:</span>
+                <span className="text-xs text-slate-700 font-bold mr-1">Quick Scenarios:</span>
                 <button
                   type="button"
                   onClick={() => handleQuickScenario('SAFE')}
@@ -442,7 +442,7 @@ export const UserDashboard: React.FC<Props> = ({
                     Transaction Amount ($)
                   </label>
                   <div className="relative">
-                    <span className="absolute left-3 top-2 text-xs text-slate-400">$</span>
+                    <span className="absolute left-3 top-2 text-xs text-slate-600 font-bold">$</span>
                     <input
                       type="number"
                       step="0.01"
@@ -695,7 +695,7 @@ export const UserDashboard: React.FC<Props> = ({
                         {t.status}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-slate-400 font-mono text-[11px]">{t.timestamp}</td>
+                    <td className="py-3 px-4 text-slate-700 font-mono text-xs font-medium">{t.timestamp}</td>
                   </tr>
                 ))}
               </tbody>

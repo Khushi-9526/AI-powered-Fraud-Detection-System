@@ -12,8 +12,8 @@ interface Props {
   onLogout: () => void;
   activeAlertsCount: number;
   engineVersion: string;
-  zoomLevel?: number;
-  onSetZoomLevel?: (level: number) => void;
+  isCompactFit?: boolean;
+  onToggleCompactFit?: () => void;
 }
 
 export const Navbar: React.FC<Props> = ({
@@ -22,8 +22,8 @@ export const Navbar: React.FC<Props> = ({
   onLogout,
   activeAlertsCount,
   engineVersion,
-  zoomLevel = 1,
-  onSetZoomLevel
+  isCompactFit = false,
+  onToggleCompactFit
 }) => {
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/90 text-slate-900 shadow-xs">
@@ -43,7 +43,7 @@ export const Navbar: React.FC<Props> = ({
                 <span>Active Shield</span>
               </span>
             </div>
-            <p className="text-[11px] text-slate-500 hidden md:block">
+            <p className="text-xs text-slate-600 hidden md:block font-medium">
               Intelligent Financial Fraud Anomaly Prevention & Real-Time Transaction Security
             </p>
           </div>
@@ -51,38 +51,28 @@ export const Navbar: React.FC<Props> = ({
 
         {/* User Session & Logout */}
         <div className="flex items-center gap-2.5">
-          {/* Quick Screenshot Fit Controls */}
-          {onSetZoomLevel && (
+          {/* Layout Fit Toggle (Razor-Sharp Vector Layout, No Blurry Zoom) */}
+          {onToggleCompactFit && (
             <div className="hidden sm:flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs mr-1">
               <button
                 type="button"
-                onClick={() => onSetZoomLevel(1)}
-                className={`px-2 py-0.5 rounded text-[11px] font-semibold transition-all ${
-                  zoomLevel === 1 ? 'bg-white text-teal-700 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+                onClick={() => isCompactFit && onToggleCompactFit()}
+                className={`px-2.5 py-0.5 rounded text-[11px] font-semibold transition-all ${
+                  !isCompactFit ? 'bg-white text-teal-800 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900'
                 }`}
-                title="100% Standard View"
+                title="100% Standard Crisp View"
               >
-                100%
+                Standard
               </button>
               <button
                 type="button"
-                onClick={() => onSetZoomLevel(0.9)}
-                className={`px-2 py-0.5 rounded text-[11px] font-semibold transition-all ${
-                  zoomLevel === 0.9 ? 'bg-white text-teal-700 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+                onClick={() => !isCompactFit && onToggleCompactFit()}
+                className={`px-2.5 py-0.5 rounded text-[11px] font-semibold transition-all ${
+                  isCompactFit ? 'bg-white text-teal-800 shadow-xs font-bold' : 'text-slate-600 hover:text-slate-900'
                 }`}
-                title="90% Screenshot Fit"
+                title="Compact Screenshot Fit (Razor-sharp vector styling)"
               >
-                90% Fit
-              </button>
-              <button
-                type="button"
-                onClick={() => onSetZoomLevel(0.85)}
-                className={`px-2 py-0.5 rounded text-[11px] font-semibold transition-all ${
-                  zoomLevel === 0.85 ? 'bg-white text-teal-700 shadow-xs' : 'text-slate-500 hover:text-slate-800'
-                }`}
-                title="85% Ultra Fit"
-              >
-                85%
+                Compact Fit
               </button>
             </div>
           )}

@@ -160,43 +160,43 @@ export const AlgorithmManagement: React.FC<Props> = ({
         {/* Metric Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
           <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200">
-            <span className="text-[10px] uppercase font-semibold text-slate-500 block">Overall Accuracy</span>
+            <span className="text-[10px] uppercase font-semibold text-slate-600 block">Overall Accuracy</span>
             <span className="text-xl font-bold font-mono text-emerald-600">
               {activeModel.accuracy}%
             </span>
-            <span className="text-[10px] text-slate-400 block mt-0.5">Tested on 47.3k tx</span>
+            <span className="text-[11px] text-slate-600 font-medium block mt-0.5">Tested on 47.3k tx</span>
           </div>
 
           <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200">
-            <span className="text-[10px] uppercase font-semibold text-slate-500 block">Precision</span>
+            <span className="text-[10px] uppercase font-semibold text-slate-600 block">Precision</span>
             <span className="text-xl font-bold font-mono text-teal-700">
               {activeModel.precision}%
             </span>
-            <span className="text-[10px] text-slate-400 block mt-0.5">True fraud positive</span>
+            <span className="text-[11px] text-slate-600 font-medium block mt-0.5">True fraud positive</span>
           </div>
 
           <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200">
-            <span className="text-[10px] uppercase font-semibold text-slate-500 block">Recall (Sensitivity)</span>
+            <span className="text-[10px] uppercase font-semibold text-slate-600 block">Recall (Sensitivity)</span>
             <span className="text-xl font-bold font-mono text-cyan-700">
               {activeModel.recall}%
             </span>
-            <span className="text-[10px] text-slate-400 block mt-0.5">Fraud caught ratio</span>
+            <span className="text-[11px] text-slate-600 font-medium block mt-0.5">Fraud caught ratio</span>
           </div>
 
           <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200">
-            <span className="text-[10px] uppercase font-semibold text-slate-500 block">F1 Harmonic Score</span>
+            <span className="text-[10px] uppercase font-semibold text-slate-600 block">F1 Harmonic Score</span>
             <span className="text-xl font-bold font-mono text-slate-900">
               {activeModel.f1Score}
             </span>
-            <span className="text-[10px] text-slate-400 block mt-0.5">Precision-recall bal</span>
+            <span className="text-[11px] text-slate-600 font-medium block mt-0.5">Precision-recall bal</span>
           </div>
 
           <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200">
-            <span className="text-[10px] uppercase font-semibold text-slate-500 block">False Positive Rate</span>
+            <span className="text-[10px] uppercase font-semibold text-slate-600 block">False Positive Rate</span>
             <span className="text-xl font-bold font-mono text-rose-600">
               {activeModel.falsePositiveRate}%
             </span>
-            <span className="text-[10px] text-slate-400 block mt-0.5">User friction level</span>
+            <span className="text-[11px] text-slate-600 font-medium block mt-0.5">User friction level</span>
           </div>
         </div>
 

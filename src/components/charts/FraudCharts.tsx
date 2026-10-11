@@ -31,7 +31,7 @@ export const CategoryBarChart: React.FC<CategoryChartProps> = ({ transactions })
       <div className="flex items-center justify-between mb-4">
         <div>
           <h4 className="text-sm font-bold text-slate-900">Fraud Cases by Category</h4>
-          <p className="text-xs text-slate-500">Distribution of anomalies across merchant sectors</p>
+          <p className="text-xs text-slate-600 font-medium">Distribution of anomalies across merchant sectors</p>
         </div>
         <span className="text-xs font-mono text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200 font-semibold">
           {fraudTxs.length} Flagged
@@ -90,7 +90,7 @@ export const RiskDistributionHistogram: React.FC<{ transactions: Transaction[] }
       <div className="flex items-center justify-between mb-4">
         <div>
           <h4 className="text-sm font-bold text-slate-900">Risk Score Density (0 - 100)</h4>
-          <p className="text-xs text-slate-500">Frequency breakdown across AI anomaly spectrum</p>
+          <p className="text-xs text-slate-600 font-medium">Frequency breakdown across AI anomaly spectrum</p>
         </div>
         <span className="text-xs font-mono text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200 font-semibold">
           {transactions.length} Samples
@@ -102,7 +102,7 @@ export const RiskDistributionHistogram: React.FC<{ transactions: Transaction[] }
           const heightPct = Math.round((bin.count / maxBinCount) * 100);
           return (
             <div key={i} className="flex flex-col items-center h-full justify-end group">
-              <span className="text-[11px] font-mono font-bold text-slate-700 mb-1 group-hover:scale-110 transition-transform">
+              <span className="text-xs font-mono font-bold text-slate-800 mb-1 group-hover:scale-110 transition-transform">
                 {bin.count}
               </span>
               <div className="w-full max-w-[48px] bg-slate-100 rounded-t-md h-full flex items-end overflow-hidden">
@@ -121,7 +121,7 @@ export const RiskDistributionHistogram: React.FC<{ transactions: Transaction[] }
 
       <div className="grid grid-cols-4 gap-2 mt-2 text-center">
         {bins.map((bin, i) => (
-          <span key={i} className="text-[10px] text-slate-500 font-medium leading-tight block truncate">
+          <span key={i} className="text-[11px] text-slate-700 font-semibold leading-tight block truncate">
             {bin.label}
           </span>
         ))}
@@ -156,13 +156,13 @@ export const FraudTrendTimeline: React.FC<{ transactions: Transaction[] }> = ({ 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
         <div>
           <h4 className="text-sm font-bold text-slate-900">Transaction Volume vs Anomaly</h4>
-          <p className="text-xs text-slate-500">24-hour velocity distribution and detected anomalous surges</p>
+          <p className="text-xs text-slate-600 font-medium">24-hour velocity distribution and detected anomalous surges</p>
         </div>
         <div className="flex items-center gap-3 text-xs shrink-0">
-          <span className="flex items-center gap-1.5 text-slate-600 font-medium">
+          <span className="flex items-center gap-1.5 text-slate-700 font-semibold">
             <span className="w-2.5 h-2.5 rounded-xs bg-teal-600" /> Normal Volume
           </span>
-          <span className="flex items-center gap-1.5 text-rose-600 font-medium">
+          <span className="flex items-center gap-1.5 text-rose-600 font-semibold">
             <span className="w-2.5 h-2.5 rounded-xs bg-rose-500" /> Flagged Fraud
           </span>
         </div>
@@ -189,7 +189,7 @@ export const FraudTrendTimeline: React.FC<{ transactions: Transaction[] }> = ({ 
 
                 {/* Fraud count pill above bar if fraud > 0 */}
                 {bucket.fraud > 0 && (
-                  <span className="text-[9px] font-mono font-bold text-rose-600 mb-1 leading-none">
+                  <span className="text-[10px] font-mono font-bold text-rose-600 mb-1 leading-none">
                     {bucket.fraud}
                   </span>
                 )}
@@ -215,7 +215,7 @@ export const FraudTrendTimeline: React.FC<{ transactions: Transaction[] }> = ({ 
                 </div>
 
                 {/* Time label */}
-                <span className="text-[10px] text-slate-500 font-mono mt-1.5 font-medium truncate w-full text-center block">
+                <span className="text-[11px] text-slate-700 font-mono mt-1.5 font-semibold truncate w-full text-center block">
                   {bucket.time}
                 </span>
               </div>

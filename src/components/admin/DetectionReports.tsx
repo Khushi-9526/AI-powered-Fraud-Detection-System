@@ -122,7 +122,7 @@ export const DetectionReports: React.FC<Props> = ({
               ({fraudRate}% of total)
             </span>
           </div>
-          <p className="text-[11px] text-slate-400 mt-1">Monitored transactions: {totalTransactionsCount}</p>
+          <p className="text-xs text-slate-600 font-medium mt-1">Monitored transactions: {totalTransactionsCount}</p>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
@@ -136,7 +136,7 @@ export const DetectionReports: React.FC<Props> = ({
             </span>
             <span className="text-[11px] text-emerald-700 font-semibold">Saved</span>
           </div>
-          <p className="text-[11px] text-slate-400 mt-1">Blocked prior to settlement</p>
+          <p className="text-xs text-slate-600 font-medium mt-1">Blocked prior to settlement</p>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
@@ -150,7 +150,7 @@ export const DetectionReports: React.FC<Props> = ({
             </span>
             <span className="text-xs text-amber-600 font-semibold">Score &ge; 75</span>
           </div>
-          <p className="text-[11px] text-slate-400 mt-1">Requiring immediate containment</p>
+          <p className="text-xs text-slate-600 font-medium mt-1">Requiring immediate containment</p>
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
@@ -164,7 +164,7 @@ export const DetectionReports: React.FC<Props> = ({
             </span>
             <span className="text-xs text-emerald-600 font-semibold">Real-time</span>
           </div>
-          <p className="text-[11px] text-slate-400 mt-1">Zero edge-gateway latency</p>
+          <p className="text-xs text-slate-600 font-medium mt-1">Zero edge-gateway latency</p>
         </div>
       </div>
 
@@ -258,7 +258,7 @@ export const DetectionReports: React.FC<Props> = ({
             <tbody className="divide-y divide-slate-100">
               {filteredCases.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-8 text-center text-slate-400">
+                  <td colSpan={8} className="py-8 text-center text-slate-600 font-medium">
                     No fraud cases matching current search criteria.
                   </td>
                 </tr>
@@ -275,11 +275,11 @@ export const DetectionReports: React.FC<Props> = ({
                     >
                       <td className="py-3 px-4 font-mono font-semibold text-slate-900">
                         {c.id}
-                        <div className="text-[10px] text-slate-400 font-sans">{c.timestamp.substring(11, 19)}</div>
+                        <div className="text-[11px] text-slate-600 font-sans font-medium">{c.timestamp.substring(11, 19)}</div>
                       </td>
                       <td className="py-3 px-4">
                         <div className="font-semibold text-slate-900">{c.userName}</div>
-                        <div className="text-[11px] text-slate-400 font-mono">{c.accountNumber}</div>
+                        <div className="text-[11px] text-slate-600 font-mono font-medium">{c.accountNumber}</div>
                       </td>
                       <td className="py-3 px-4 font-mono font-bold text-slate-900">
                         ${c.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
@@ -288,14 +288,14 @@ export const DetectionReports: React.FC<Props> = ({
                         <div className="font-medium text-slate-800 truncate max-w-[160px]">
                           {c.merchantOrRecipient}
                         </div>
-                        <div className="text-[11px] text-slate-500">{c.category}</div>
+                        <div className="text-[11px] text-slate-600 font-medium">{c.category}</div>
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-1.5">
                           <span>{c.location.flag}</span>
-                          <span className="text-slate-700">{c.location.city}, {c.location.country}</span>
+                          <span className="text-slate-800 font-medium">{c.location.city}, {c.location.country}</span>
                         </div>
-                        <div className="text-[10px] text-slate-400 font-mono">{c.location.ip}</div>
+                        <div className="text-[11px] text-slate-600 font-mono font-medium">{c.location.ip}</div>
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-2">
@@ -455,11 +455,11 @@ export const DetectionReports: React.FC<Props> = ({
             </div>
 
             {/* Raw Investigation Metadata */}
-            <div className="p-3 bg-slate-50 text-slate-700 rounded-xl font-mono text-[11px] space-y-1 border border-slate-200">
-              <div><span className="text-slate-400">User:</span> {selectedCase.userName} ({selectedCase.userId})</div>
-              <div><span className="text-slate-400">Beneficiary:</span> {selectedCase.merchantOrRecipient}</div>
-              <div><span className="text-slate-400">Device Fingerprint:</span> {selectedCase.device.fingerprint}</div>
-              <div><span className="text-slate-400">IP Routing:</span> {selectedCase.location.ip} ({selectedCase.location.city}, {selectedCase.location.country})</div>
+            <div className="p-3 bg-slate-50 text-slate-800 rounded-xl font-mono text-[11px] space-y-1 border border-slate-200">
+              <div><span className="text-slate-600 font-semibold">User:</span> {selectedCase.userName} ({selectedCase.userId})</div>
+              <div><span className="text-slate-600 font-semibold">Beneficiary:</span> {selectedCase.merchantOrRecipient}</div>
+              <div><span className="text-slate-600 font-semibold">Device Fingerprint:</span> {selectedCase.device.fingerprint}</div>
+              <div><span className="text-slate-600 font-semibold">IP Routing:</span> {selectedCase.location.ip} ({selectedCase.location.city}, {selectedCase.location.country})</div>
             </div>
 
             {/* Investigator Action Form */}

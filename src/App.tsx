@@ -27,7 +27,7 @@ export default function App() {
     accountNumber?: string;
   } | null>(null);
 
-  const [zoomLevel, setZoomLevel] = useState<number>(1);
+  const [isCompactFit, setIsCompactFit] = useState<boolean>(false);
   const [systemConfig, setSystemConfig] = useState<SystemConfig>(initialSystemConfig);
   const [transactions, setTransactions] = useState<Transaction[]>(initialTransactions);
   const [alerts, setAlerts] = useState<FraudAlert[]>(initialAlerts);
@@ -143,10 +143,7 @@ export default function App() {
   }
 
   return (
-    <div
-      style={zoomLevel !== 1 ? ({ zoom: zoomLevel } as React.CSSProperties) : undefined}
-      className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans flex flex-col selection:bg-teal-500 selection:text-white transition-all"
-    >
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans flex flex-col selection:bg-teal-500 selection:text-white transition-all">
       {/* Top Navbar with Active User Info, Screenshot Fit Controls & Logout Button */}
       <Navbar
         currentRole={currentUser.role}
@@ -154,15 +151,15 @@ export default function App() {
         onLogout={handleLogout}
         activeAlertsCount={activeAlertsCount}
         engineVersion={activeModel.version}
-        zoomLevel={zoomLevel}
-        onSetZoomLevel={setZoomLevel}
+        isCompactFit={isCompactFit}
+        onToggleCompactFit={() => setIsCompactFit(prev => !prev)}
       />
 
       {/* Role Banner / Context Bar */}
       <div className="bg-white border-b border-slate-200/90 px-4 py-2 shadow-xs">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-slate-600">
+            <span className="font-semibold text-slate-700">
               Active Environment:
             </span>
             <span className={`px-2.5 py-0.5 rounded-full font-bold text-[10px] ${
@@ -173,17 +170,17 @@ export default function App() {
               {currentUser.role === 'ADMIN' ? 'ADMIN SECURITY CONSOLE' : 'CLIENT FINANCIAL PORTAL'}
             </span>
             <span className="text-slate-300 hidden sm:inline">·</span>
-            <span className="text-slate-500 hidden sm:inline">
+            <span className="text-slate-600 hidden sm:inline font-medium">
               {currentUser.role === 'ADMIN'
                 ? 'Configure thresholds, review detected anomalies, and retrain ML algorithms.'
                 : 'Execute transactions and respond to security fraud alerts in real time.'}
             </span>
           </div>
 
-          <div className="flex items-center gap-3 text-[11px] text-slate-500 font-mono">
+          <div className="flex items-center gap-3 text-[11px] text-slate-600 font-mono font-medium">
             <span>ML Anomaly Sensitivity: {activeModel.hyperparameters.anomalySensitivity}</span>
             <span className="text-slate-300">·</span>
-            <span className="text-emerald-600 font-semibold flex items-center gap-1">
+            <span className="text-emerald-700 font-bold flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               Active Shield: Live
             </span>
@@ -192,7 +189,11 @@ export default function App() {
       </div>
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-5 md:p-6">
+      <main className={`flex-1 w-full mx-auto transition-all ${
+        isCompactFit
+          ? 'max-w-6xl p-2.5 sm:p-4'
+          : 'max-w-7xl p-3 sm:p-5 md:p-6'
+      }`}>
         {currentUser.role === 'ADMIN' ? (
           <AdminDashboard
             systemConfig={systemConfig}

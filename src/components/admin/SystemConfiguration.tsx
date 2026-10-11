@@ -178,7 +178,7 @@ export const SystemConfiguration: React.FC<Props> = ({
                 onChange={e => handleChange('riskThresholdLow', Number(e.target.value))}
                 className="w-full accent-teal-600 cursor-pointer"
               />
-              <p className="text-[11px] text-slate-400">Scores below this are instantly approved.</p>
+              <p className="text-xs text-slate-600 font-medium">Scores below this are instantly approved.</p>
             </div>
 
             {/* High Risk Boundary */}
@@ -199,7 +199,7 @@ export const SystemConfiguration: React.FC<Props> = ({
                 onChange={e => handleChange('riskThresholdHigh', Number(e.target.value))}
                 className="w-full accent-amber-500 cursor-pointer"
               />
-              <p className="text-[11px] text-slate-400">Scores above trigger fraud alerts to user & admin.</p>
+              <p className="text-xs text-slate-600 font-medium">Scores above trigger fraud alerts to user & admin.</p>
             </div>
 
             {/* Auto Block Ceiling */}
@@ -220,7 +220,7 @@ export const SystemConfiguration: React.FC<Props> = ({
                 onChange={e => handleChange('autoBlockAboveScore', Number(e.target.value))}
                 className="w-full accent-rose-600 cursor-pointer"
               />
-              <p className="text-[11px] text-slate-400">Automatically blocks transaction and freezes card.</p>
+              <p className="text-xs text-slate-600 font-medium">Automatically blocks transaction and freezes card.</p>
             </div>
 
             {/* Max Single Amount */}
@@ -229,7 +229,7 @@ export const SystemConfiguration: React.FC<Props> = ({
                 Max Single Transaction Amount ($)
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-2 text-xs text-slate-400">$</span>
+                <span className="absolute left-3 top-2 text-xs text-slate-600 font-bold">$</span>
                 <input
                   type="number"
                   min="500"
@@ -240,7 +240,7 @@ export const SystemConfiguration: React.FC<Props> = ({
                   className="w-full pl-6 pr-3 py-1.5 text-xs font-mono bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:border-teal-500 focus:bg-white"
                 />
               </div>
-              <p className="text-[11px] text-slate-400">Absolute transaction ceiling before automatic block.</p>
+              <p className="text-xs text-slate-600 font-medium">Absolute transaction ceiling before automatic block.</p>
             </div>
 
             {/* Velocity Burst Limit */}
@@ -256,7 +256,7 @@ export const SystemConfiguration: React.FC<Props> = ({
                 onChange={e => handleChange('velocityLimitPer5Min', Number(e.target.value))}
                 className="w-full px-3 py-1.5 text-xs font-mono bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:border-teal-500 focus:bg-white"
               />
-              <p className="text-[11px] text-slate-400">Max permissible requests before velocity alert triggers.</p>
+              <p className="text-xs text-slate-600 font-medium">Max permissible requests before velocity alert triggers.</p>
             </div>
 
             {/* 2FA Step-up Threshold */}
@@ -265,7 +265,7 @@ export const SystemConfiguration: React.FC<Props> = ({
                 Step-up 2FA Challenge Floor ($)
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-2 text-xs text-slate-400">$</span>
+                <span className="absolute left-3 top-2 text-xs text-slate-600 font-bold">$</span>
                 <input
                   type="number"
                   min="100"
@@ -276,7 +276,7 @@ export const SystemConfiguration: React.FC<Props> = ({
                   className="w-full pl-6 pr-3 py-1.5 text-xs font-mono bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:border-teal-500 focus:bg-white"
                 />
               </div>
-              <p className="text-[11px] text-slate-400">Forces OTP verification code sent to user phone/email.</p>
+              <p className="text-xs text-slate-600 font-medium">Forces OTP verification code sent to user phone/email.</p>
             </div>
           </div>
         </div>
@@ -291,7 +291,7 @@ export const SystemConfiguration: React.FC<Props> = ({
               </h4>
             </div>
             <div className="flex items-center gap-2 text-xs">
-              <span className="text-slate-500">Total Normalized Weight:</span>
+              <span className="text-slate-600 font-medium">Total Normalized Weight:</span>
               <span className={`font-mono font-bold ${totalWeights === 100 ? 'text-emerald-600' : 'text-amber-600'}`}>
                 {totalWeights}%
               </span>
@@ -313,7 +313,7 @@ export const SystemConfiguration: React.FC<Props> = ({
                 <option value="RANDOM_FOREST">Deep Neural Behavioral Classifier</option>
                 <option value="RULE_ENGINE_ONLY">Deterministic Rule Guardrails Only</option>
               </select>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-xs text-slate-600 font-medium">
                 The hybrid model combines anomaly scoring with statistical behavioral profiles.
               </p>
             </div>
