@@ -27,6 +27,7 @@ export default function App() {
     accountNumber?: string;
   } | null>(null);
 
+  const [zoomLevel, setZoomLevel] = useState<number>(1);
   const [systemConfig, setSystemConfig] = useState<SystemConfig>(initialSystemConfig);
   const [transactions, setTransactions] = useState<Transaction[]>(initialTransactions);
   const [alerts, setAlerts] = useState<FraudAlert[]>(initialAlerts);
@@ -142,18 +143,23 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans flex flex-col selection:bg-teal-500 selection:text-white">
-      {/* Top Navbar with Active User Info & Logout Button */}
+    <div
+      style={zoomLevel !== 1 ? ({ zoom: zoomLevel } as React.CSSProperties) : undefined}
+      className="min-h-screen bg-[#F8FAFC] text-slate-900 font-sans flex flex-col selection:bg-teal-500 selection:text-white transition-all"
+    >
+      {/* Top Navbar with Active User Info, Screenshot Fit Controls & Logout Button */}
       <Navbar
         currentRole={currentUser.role}
         userName={currentUser.name}
         onLogout={handleLogout}
         activeAlertsCount={activeAlertsCount}
         engineVersion={activeModel.version}
+        zoomLevel={zoomLevel}
+        onSetZoomLevel={setZoomLevel}
       />
 
       {/* Role Banner / Context Bar */}
-      <div className="bg-white border-b border-slate-200/90 px-4 py-2.5 shadow-xs">
+      <div className="bg-white border-b border-slate-200/90 px-4 py-2 shadow-xs">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
           <div className="flex items-center gap-2">
             <span className="font-semibold text-slate-600">
@@ -186,7 +192,7 @@ export default function App() {
       </div>
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 md:p-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-5 md:p-6">
         {currentUser.role === 'ADMIN' ? (
           <AdminDashboard
             systemConfig={systemConfig}

@@ -12,6 +12,8 @@ interface Props {
   onLogout: () => void;
   activeAlertsCount: number;
   engineVersion: string;
+  zoomLevel?: number;
+  onSetZoomLevel?: (level: number) => void;
 }
 
 export const Navbar: React.FC<Props> = ({
@@ -19,42 +21,81 @@ export const Navbar: React.FC<Props> = ({
   userName,
   onLogout,
   activeAlertsCount,
-  engineVersion
+  engineVersion,
+  zoomLevel = 1,
+  onSetZoomLevel
 }) => {
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/90 text-slate-900 shadow-xs">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
         {/* Brand Identity */}
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-gradient-to-tr from-teal-600 to-cyan-600 text-white shadow-sm flex items-center justify-center font-bold">
-            <ShieldAlert className="w-5 h-5 text-white" />
+        <div className="flex items-center gap-2.5">
+          <div className="p-2 rounded-xl bg-gradient-to-tr from-teal-600 to-cyan-600 text-white shadow-xs flex items-center justify-center font-bold">
+            <ShieldAlert className="w-4 h-4 text-white" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-base tracking-tight text-slate-900">
+              <span className="font-extrabold text-sm sm:text-base tracking-tight text-slate-900">
                 AI-POWERED <span className="text-teal-600">FRAUD DETECTION SYSTEM</span>
               </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200 font-bold">
-                v{engineVersion}
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 font-bold flex items-center gap-1">
+                <span>☕</span>
+                <span>Java 21 / Spring Boot 3</span>
               </span>
             </div>
-            <p className="text-[11px] text-slate-500 hidden sm:block">
-              Intelligent Financial Fraud Anomaly Prevention
+            <p className="text-[11px] text-slate-500 hidden md:block">
+              Intelligent Financial Fraud Anomaly Prevention · Enterprise Spring Boot REST Engine
             </p>
           </div>
         </div>
 
         {/* User Session & Logout */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
+          {/* Quick Screenshot Fit Controls */}
+          {onSetZoomLevel && (
+            <div className="hidden sm:flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs mr-1">
+              <button
+                type="button"
+                onClick={() => onSetZoomLevel(1)}
+                className={`px-2 py-0.5 rounded text-[11px] font-semibold transition-all ${
+                  zoomLevel === 1 ? 'bg-white text-teal-700 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+                }`}
+                title="100% Standard View"
+              >
+                100%
+              </button>
+              <button
+                type="button"
+                onClick={() => onSetZoomLevel(0.9)}
+                className={`px-2 py-0.5 rounded text-[11px] font-semibold transition-all ${
+                  zoomLevel === 0.9 ? 'bg-white text-teal-700 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+                }`}
+                title="90% Screenshot Fit"
+              >
+                90% Fit
+              </button>
+              <button
+                type="button"
+                onClick={() => onSetZoomLevel(0.85)}
+                className={`px-2 py-0.5 rounded text-[11px] font-semibold transition-all ${
+                  zoomLevel === 0.85 ? 'bg-white text-teal-700 shadow-xs' : 'text-slate-500 hover:text-slate-800'
+                }`}
+                title="85% Ultra Fit"
+              >
+                85%
+              </button>
+            </div>
+          )}
+
           {/* Active User Badge */}
-          <div className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs">
             {currentRole === 'ADMIN' ? (
               <Shield className="w-3.5 h-3.5 text-teal-600 shrink-0" />
             ) : (
               <User className="w-3.5 h-3.5 text-cyan-600 shrink-0" />
             )}
             <div className="leading-tight">
-              <span className="font-semibold text-slate-900 block truncate max-w-[150px] sm:max-w-[200px]">
+              <span className="font-semibold text-slate-900 block truncate max-w-[130px] sm:max-w-[180px]">
                 {userName}
               </span>
               <span className="text-[10px] text-teal-600 font-mono uppercase tracking-wider block">
@@ -73,7 +114,7 @@ export const Navbar: React.FC<Props> = ({
           <button
             type="button"
             onClick={onLogout}
-            className="px-3.5 py-2 text-xs font-semibold rounded-xl bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 border border-slate-200 hover:border-slate-300 transition-all flex items-center gap-1.5 shadow-xs"
+            className="px-3 py-1.5 text-xs font-semibold rounded-xl bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 border border-slate-200 hover:border-slate-300 transition-all flex items-center gap-1.5 shadow-xs"
             title="Log out and return to portal selection"
           >
             <LogOut className="w-3.5 h-3.5 text-rose-500" />

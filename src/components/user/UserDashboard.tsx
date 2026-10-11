@@ -162,37 +162,41 @@ export const UserDashboard: React.FC<Props> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Account Header Summary */}
-      <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="space-y-1.5">
+      <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="space-y-1">
           <div className="flex items-center gap-2 text-xs text-teal-700">
-            <CreditCard className="w-4 h-4 text-teal-600" />
+            <CreditCard className="w-3.5 h-3.5 text-teal-600" />
             <span className="font-mono font-medium">Account · {accountNumber}</span>
             <span className="text-slate-300">·</span>
-            <span className="text-emerald-700 font-semibold flex items-center gap-1">
+            <span className="text-emerald-700 font-semibold flex items-center gap-1 text-[11px]">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               Active AI Anomaly Shield
             </span>
+            <span className="text-slate-300">·</span>
+            <span className="text-amber-800 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200 font-bold text-[10px] font-mono">
+              ☕ Java 21 Engine
+            </span>
           </div>
-          <h2 className="text-2xl font-black tracking-tight text-slate-900">{userName}</h2>
+          <h2 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900">{userName}</h2>
           <p className="text-xs text-slate-500">
             Current Available Balance: <span className="font-mono font-bold text-emerald-600 text-sm">$24,850.00 USD</span>
           </p>
         </div>
 
         {/* Alerts Badge Counter */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           {activeAlerts.length > 0 ? (
-            <div className="px-4 py-2.5 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-3 text-rose-800 shadow-xs">
+            <div className="px-3.5 py-2 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-2.5 text-rose-800 shadow-xs">
               <BellRing className="w-4 h-4 text-rose-600 animate-pulse shrink-0" />
               <div className="text-xs">
                 <span className="font-bold">{activeAlerts.length} Suspicious Alert{activeAlerts.length > 1 ? 's' : ''}</span>
-                <span className="text-rose-600 block text-[11px]">Action required to protect account</span>
+                <span className="text-rose-600 block text-[10px]">Action required to protect account</span>
               </div>
             </div>
           ) : (
-            <div className="px-4 py-2.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2 text-emerald-800 text-xs">
+            <div className="px-3.5 py-2 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2 text-emerald-800 text-xs">
               <ShieldCheck className="w-4 h-4 text-emerald-600" />
               <span className="font-medium">All Transactions Clear · Zero Alerts</span>
             </div>
@@ -201,11 +205,11 @@ export const UserDashboard: React.FC<Props> = ({
       </div>
 
       {/* User Dashboard Navigation Tabs */}
-      <div className="bg-white rounded-2xl p-2 border border-slate-200 flex items-center gap-2 shadow-xs">
+      <div className="bg-white rounded-2xl p-1.5 border border-slate-200 flex items-center gap-1.5 shadow-xs">
         <button
           type="button"
           onClick={() => setActiveTab('ALERTS')}
-          className={`px-4 py-2 text-xs font-semibold rounded-xl transition-all flex items-center gap-2 ${
+          className={`px-3.5 py-1.5 text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5 ${
             activeTab === 'ALERTS'
               ? 'bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold shadow-xs'
               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -223,7 +227,7 @@ export const UserDashboard: React.FC<Props> = ({
         <button
           type="button"
           onClick={() => setActiveTab('NEW_TX')}
-          className={`px-4 py-2 text-xs font-semibold rounded-xl transition-all flex items-center gap-2 ${
+          className={`px-3.5 py-1.5 text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5 ${
             activeTab === 'NEW_TX'
               ? 'bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold shadow-xs'
               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -236,7 +240,7 @@ export const UserDashboard: React.FC<Props> = ({
         <button
           type="button"
           onClick={() => setActiveTab('HISTORY')}
-          className={`px-4 py-2 text-xs font-semibold rounded-xl transition-all flex items-center gap-2 ${
+          className={`px-3.5 py-1.5 text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5 ${
             activeTab === 'HISTORY'
               ? 'bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold shadow-xs'
               : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -280,7 +284,7 @@ export const UserDashboard: React.FC<Props> = ({
                 return (
                   <div
                     key={alert.id}
-                    className={`p-6 rounded-2xl border transition-all ${
+                    className={`p-4 sm:p-5 rounded-2xl border transition-all ${
                       isResolved
                         ? 'bg-slate-50 border-slate-200 opacity-80'
                         : isCritical
@@ -383,9 +387,9 @@ export const UserDashboard: React.FC<Props> = ({
 
       {/* TAB 2: MAKE TRANSACTION */}
       {activeTab === 'NEW_TX' && (
-        <div className="space-y-5">
-          <div className="bg-white rounded-2xl p-6 border border-slate-200 space-y-4 shadow-xs">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+        <div className="space-y-4">
+          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200 space-y-3 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
               <div>
                 <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
                   <Send className="w-4 h-4 text-teal-600" />
