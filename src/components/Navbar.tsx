@@ -38,13 +38,13 @@ export const Navbar: React.FC<Props> = ({
               <span className="font-extrabold text-sm sm:text-base tracking-tight text-slate-900">
                 AI-POWERED <span className="text-teal-600">FRAUD DETECTION SYSTEM</span>
               </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 font-bold flex items-center gap-1">
-                <span>☕</span>
-                <span>Java 21 / Spring Boot 3</span>
+              <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-teal-50 text-teal-800 border border-teal-200 font-semibold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-teal-600 animate-pulse" />
+                <span>Active Shield</span>
               </span>
             </div>
             <p className="text-[11px] text-slate-500 hidden md:block">
-              Intelligent Financial Fraud Anomaly Prevention · Enterprise Spring Boot REST Engine
+              Intelligent Financial Fraud Anomaly Prevention & Real-Time Transaction Security
             </p>
           </div>
         </div>

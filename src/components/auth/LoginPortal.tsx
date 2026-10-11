@@ -148,13 +148,13 @@ export const LoginPortal: React.FC<Props> = ({ onLogin }) => {
                 <span className="font-extrabold text-sm sm:text-base tracking-tight text-slate-900">
                   AI-POWERED <span className="text-teal-600">FRAUD DETECTION SYSTEM</span>
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 font-bold flex items-center gap-1">
-                  <span>☕</span>
-                  <span>Java 21 / Spring Boot</span>
+                <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-teal-50 text-teal-800 border border-teal-200 font-semibold flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-teal-600 animate-pulse" />
+                  <span>Active Shield</span>
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 hidden sm:block">
-                Enterprise Anomaly Detection & Financial Protection · Java Spring Boot Engine
+                Enterprise Anomaly Detection & Financial Protection · Multi-Vector Security Gateway
               </p>
             </div>
           </div>
@@ -582,9 +582,9 @@ export const LoginPortal: React.FC<Props> = ({ onLogin }) => {
           <div className="flex items-center gap-2">
             <span className="font-semibold text-slate-700">AI-powered Fraud Detection System</span>
             <span>·</span>
-            <span className="text-amber-800 font-medium">☕ Java 21 / Spring Boot 3 Engine</span>
+            <span className="text-teal-700 font-medium">Enterprise Security Operations</span>
             <span>·</span>
-            <span>2-Factor Authenticator</span>
+            <span>2-Factor Authenticator Protected</span>
           </div>
           <div className="flex items-center gap-3 text-[10px] font-mono text-slate-400">
             <span>Google Authenticator TOTP</span>
